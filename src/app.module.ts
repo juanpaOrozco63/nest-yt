@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { DataSourceConfig } from './config/data.source';
 import { UsersModule } from './users/users.module';
 import { ProjectsModule } from './projects/projects.module';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -14,7 +15,8 @@ import { ProjectsModule } from './projects/projects.module';
     }),
     TypeOrmModule.forRoot({...DataSourceConfig}),
     UsersModule,
-    ProjectsModule],
+    ProjectsModule,
+    AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
