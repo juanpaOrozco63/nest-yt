@@ -34,7 +34,7 @@ export class AuthService {
         }
     }
 
-    public  signJWT(token:ISignJWT){
+    public signJWT(token:ISignJWT){
 
         return  jwt.sign(token.payload,token.secret,{expiresIn:token.expires})
         

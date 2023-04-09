@@ -9,7 +9,7 @@
 
 ## Generate migrations typeorm
 
-- npm run m:gen  --src/migrations/init
+- npm run m:gen  -- src/migrations/init
 
 ## Run migrations typeorm
 

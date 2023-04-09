@@ -1,9 +1,15 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { Delete, Param, Put } from '@nestjs/common/decorators';
+import { Delete, Param, Put, UseGuards } from '@nestjs/common/decorators';
+import { AdminAccess } from 'src/auth/decorators/admin.decorator';
+import { PublicAccess } from 'src/auth/decorators/public.decorator';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { UserDTO, UserUpdateDTO } from '../dto/user.dto';
 import { UsersService } from '../services/users.service';
 
 @Controller('users')
+@UseGuards(AuthGuard,RolesGuard)
 export class UsersController {
     constructor(
         private readonly usersService:UsersService){
@@ -14,11 +20,12 @@ export class UsersController {
     public async createUser(@Body() body:UserDTO){
         return await this.usersService.createUser(body);
     }
+    @AdminAccess()
     @Get('findAll')
     public async findAllUsers(){
         return await this.usersService.findUsers();
     }
-    
+    @PublicAccess()
     @Get(':id')
     public async findUserById(@Param('id') id:string){
         return await this.usersService.findUserById(id);
