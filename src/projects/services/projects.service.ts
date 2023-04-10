@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ACCES_LEVEL } from 'src/constants/roles';
+import { UsersProjectsEntity } from 'src/users/entities/usersProjects.entity';
+import { UsersService } from 'src/users/services/users.service';
 import { ErrorManager } from 'src/utils/error.manager';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { ProjectDTO, ProjectUpdateDTO } from '../dto/project.dto';
@@ -8,12 +11,21 @@ import { ProjectsEntity } from '../entities/projects.entity';
 @Injectable()
 export class ProjectsService {
 
-    constructor(@InjectRepository(ProjectsEntity) private readonly projectRepository:Repository<ProjectsEntity> ){
+    constructor(
+        @InjectRepository(ProjectsEntity) private readonly projectRepository:Repository<ProjectsEntity>,
+        @InjectRepository(UsersProjectsEntity) private readonly userProjectRepository:Repository<UsersProjectsEntity>,
+        private readonly userService:UsersService ){
 
     }
-    public async createProject(body:ProjectDTO):Promise<ProjectsEntity>{
+    public async createProject(body:ProjectDTO,userId:string):Promise<any>{
         try {
-            return await this.projectRepository.save(body);
+            const user = await this.userService.findUserById(userId);
+            const project = await this.projectRepository.save(body);
+            return await this.userProjectRepository.save({
+                accessLevel:ACCES_LEVEL.OWNER,
+                user:user,
+                project
+            })
         } catch (error) {
             throw  ErrorManager.createSignatureError(error.message)
         }
