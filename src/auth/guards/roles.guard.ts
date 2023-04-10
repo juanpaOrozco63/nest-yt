@@ -24,17 +24,19 @@ export class RolesGuard implements CanActivate {
         ADMIN_KEY,
         context.getHandler()
       )
+      
       const roles = this.reflector.get<Array<keyof typeof ROLES>>(
         ROLES_KEY,
         context.getHandler()
       )
       const req = context.switchToHttp().getRequest<Request>();
       const {roleUser} = req
+      
       if(roles === undefined){
         if(!admin){
           return true
         }
-        else if(admin && roleUser === admin){
+        else if(admin || roleUser === admin){
           return true;
         }
         else{
@@ -46,7 +48,7 @@ export class RolesGuard implements CanActivate {
       }
       const isAuth = roles.some((role)=>role === roleUser)
       if(!isAuth){
-        throw new UnauthorizedException('No tienes permisos para esta operación')
+        throw new UnauthorizedException('No tienes permisos para esta operación debes autenticarte')
       }
     return true;
   }

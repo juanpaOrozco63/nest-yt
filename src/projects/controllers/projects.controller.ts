@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AccessLevel } from 'src/auth/decorators/access-level.decorator';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { AccessLevelGuard } from 'src/auth/guards/access-level.guard';
@@ -7,6 +8,7 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { ProjectDTO, ProjectUpdateDTO } from '../dto/project.dto';
 import { ProjectsService } from '../services/projects.service';
 
+@ApiTags('Project')
 
 @Controller('projects')
 @UseGuards(AuthGuard,RolesGuard,AccessLevelGuard)

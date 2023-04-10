@@ -32,4 +32,26 @@ export class TasksService {
         }
        
     }
+    public async findTaskById (id:string):Promise<TasksEntity>{
+        try {
+            const task:TasksEntity = await this.tasksRepository
+            .createQueryBuilder('task')
+            .where({id})
+            .leftJoinAndSelect('task.project','project')
+            .leftJoinAndSelect('project.usersIncludes','usersIncludes')
+            .leftJoinAndSelect('usersIncludes.user','user')
+            .getOne()
+            if(!task){
+                throw new ErrorManager({
+                    type:'BAD_REQUEST',
+                    message:'No se encontro ninguna tarea  con el id '+ id
+                })
+            }
+            return task
+        } catch (error) {
+            throw  ErrorManager.createSignatureError(error.message)
+
+        }
+       
+    }
 }
