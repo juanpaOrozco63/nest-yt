@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AccessLevel } from 'src/auth/decorators/access-level.decorator';
+import { PublicAccess } from 'src/auth/decorators/public.decorator';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { AccessLevelGuard } from 'src/auth/guards/access-level.guard';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
@@ -38,5 +39,9 @@ export class ProjectsController {
     public async deleteProject(@Param('projectId', new ParseUUIDPipe()) id :string){
         return await this.projectService.deleteProject(id);
     }
-    
+    @PublicAccess()
+    @Get('list/api')
+    public async getApi(){
+        return await this.projectService.listApi();
+    }
 }
